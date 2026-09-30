@@ -60,6 +60,22 @@ const (
 	MCPPerBackendRefHTTPRoutePrefix = MCPGeneratedResourceCommonPrefix + "br-"
 	// MCPPerBackendHTTPRouteFilterPrefix is the prefix for the HTTP route filter names for per-backend resources.
 	MCPPerBackendHTTPRouteFilterPrefix = MCPGeneratedResourceCommonPrefix + "brf-"
+	// A2ABackendListenerPort is the port for the A2A backend listener.
+	A2ABackendListenerPort = 10089
+	// A2AGeneratedResourceCommonPrefix is the common prefix for A2A resources.
+	A2AGeneratedResourceCommonPrefix = "ai-eg-a2a-"
+	// A2AMainHTTPRoutePrefix is the prefix for A2A HTTPRoute resources.
+	A2AMainHTTPRoutePrefix = A2AGeneratedResourceCommonPrefix + "main-"
+	// A2ARouteHeader is the header identifying the a2a route.
+	A2ARouteHeader = EnvoyAIGatewayHeaderPrefix + "a2a-route"
+	// A2AFilterName is the Envoy native A2A filter name.
+	A2AFilterName = "envoy.filters.http.a2a"
+	// A2AMethodHeader carries the parsed JSON-RPC method as a request header for CEL authz
+	// rules, set by the Lua bridge on the A2A backend listener.
+	A2AMethodHeader = EnvoyAIGatewayHeaderPrefix + "a2a-method"
+	// A2ACardConfigMapPrefix is the ConfigMap prefix for AgentCards.
+	A2ACardConfigMapPrefix = A2AGeneratedResourceCommonPrefix + "card-"
+
 	// MCPPerBackendCredentialSecretPrefix is the prefix for the credential secrets created for per-backend credential injection.
 	MCPPerBackendCredentialSecretPrefix = MCPGeneratedResourceCommonPrefix + "cred-"
 

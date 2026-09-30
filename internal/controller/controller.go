@@ -241,6 +241,19 @@ func StartControllers(ctx context.Context, mgr manager.Manager, config *rest.Con
 		return fmt.Errorf("failed to create controller for MCPRoute: %w", err)
 	}
 
+	// A2ARoute controller: generates the A2A HTTPRoute (card + rpc rules) and the
+	// gateway-served AgentCard filter/ConfigMap. The generated resources are
+	// controller-owned, so Kubernetes garbage collection removes them on A2ARoute
+	// deletion; no orphan index is needed (unlike MCP's per-backend HTTPRoutes).
+	a2aRouteC := NewA2ARouteController(c, kubernetes.NewForConfigOrDie(config), logger.WithName("ai-gateway-a2a-route"),
+		gatewayEventChan,
+	)
+	if err = TypedControllerBuilderForCRD(mgr, &aigv1a1.A2ARoute{}).
+		Owns(&gwapiv1.HTTPRoute{}).
+		Complete(a2aRouteC); err != nil {
+		return fmt.Errorf("failed to create controller for A2ARoute: %w", err)
+	}
+
 	// GatewayConfig controller for gateway-scoped configuration.
 	gatewayConfigC := NewGatewayConfigController(c, logger.WithName("gateway-config"), gatewayEventChan)
 	if err = TypedControllerBuilderForCRD(mgr, &aigv1b1.GatewayConfig{}).
